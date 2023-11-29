@@ -1,6 +1,6 @@
 package com.philyeo.lotteryapp.shared.persistance.repository;
 
-import com.philyeo.lotteryapp.shared.dto.DamacaiResult;
+import com.philyeo.lotteryapp.shared.dto.damacai.DamacaiResult;
 import com.philyeo.lotteryapp.shared.persistance.document.DamacaiResults;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

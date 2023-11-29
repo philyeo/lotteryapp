@@ -1,8 +1,8 @@
 package com.philyeo.lotteryapp.admin.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.philyeo.lotteryapp.shared.dto.DamacaiDrawResultResponse;
-import com.philyeo.lotteryapp.shared.dto.DamacaiResult;
+import com.philyeo.lotteryapp.shared.dto.damacai.DamacaiDrawResultResponse;
+import com.philyeo.lotteryapp.shared.dto.damacai.DamacaiResult;
 import com.philyeo.lotteryapp.shared.persistance.document.DamacaiResults;
 import com.philyeo.lotteryapp.shared.persistance.repository.DamacaiRepository;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import static com.philyeo.lotteryapp.shared.EndpointConstants.MAINVIEW_DAMACAI;
-import static com.philyeo.lotteryapp.shared.EndpointConstants.TEST_MAINVIEW_DAMACAI;
 
 @Service
 @AllArgsConstructor
@@ -112,7 +111,7 @@ public class DamacaiScrapperService {
         return  responseBody;
     }
 
-    public boolean isValidDateFormat(String dateStr) {
+    private boolean isValidDateFormat(String dateStr) {
         // Set the desired date format (YYYYMMDD)
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         dateFormat.setLenient(false); // Set lenient to false for strict date validation

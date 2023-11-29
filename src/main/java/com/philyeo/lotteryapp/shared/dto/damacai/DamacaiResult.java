@@ -1,4 +1,4 @@
-package com.philyeo.lotteryapp.shared.dto;
+package com.philyeo.lotteryapp.shared.dto.damacai;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

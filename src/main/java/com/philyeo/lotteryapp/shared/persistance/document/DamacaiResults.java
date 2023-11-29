@@ -1,6 +1,6 @@
 package com.philyeo.lotteryapp.shared.persistance.document;
 
-import com.philyeo.lotteryapp.shared.dto.DamacaiResult;
+import com.philyeo.lotteryapp.shared.dto.damacai.DamacaiResult;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

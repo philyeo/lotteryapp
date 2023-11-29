@@ -1,6 +1,7 @@
 package com.philyeo.lotteryapp.admin.web;
 
 import com.philyeo.lotteryapp.admin.service.DamacaiScrapperService;
+import com.philyeo.lotteryapp.admin.service.MagnumScrapperService;
 import com.philyeo.lotteryapp.shared.enums.LotteryCompany;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
 
 
 import java.io.IOException;
+import java.text.ParseException;
 
 @Slf4j
 @RestController
@@ -20,12 +22,17 @@ public class ScrapperController {
     @Autowired
     private final DamacaiScrapperService damacaiScrapperService;
 
+    @Autowired
+    private final MagnumScrapperService magnumScrapperService;
+
     @PostMapping("{company}/actions/send")
     @ResponseStatus(HttpStatus.OK)
     public void scrapdrawresult(@PathVariable("company") @NotNull final  String company,
-        @RequestParam(name = "date", required = true) String date) throws IOException { // DATE expected in YYYYMMDD format
+        @RequestParam(name = "date", required = true) String date) throws IOException, ParseException { // DATE expected in YYYYMMDD format
         if(company.equals(LotteryCompany.DAMACAI.name())) {
             damacaiScrapperService.scrapDrawResult(date);
+        } else if(company.equals(LotteryCompany.MAGNUM.name())) {
+            magnumScrapperService.scrapDrawResult(date);
         }
     }
 

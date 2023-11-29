@@ -1,4 +1,4 @@
-package com.philyeo.lotteryapp.shared.dto;
+package com.philyeo.lotteryapp.shared.dto.damacai;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
