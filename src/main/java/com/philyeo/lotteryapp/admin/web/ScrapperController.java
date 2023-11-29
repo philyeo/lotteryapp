@@ -25,7 +25,7 @@ public class ScrapperController {
     @Autowired
     private final MagnumScrapperService magnumScrapperService;
 
-    @PostMapping("{company}/actions/send")
+    @PostMapping("{company}/actions/scrap")
     @ResponseStatus(HttpStatus.OK)
     public void scrapdrawresult(@PathVariable("company") @NotNull final  String company,
         @RequestParam(name = "date", required = true) String date) throws IOException, ParseException { // DATE expected in YYYYMMDD format

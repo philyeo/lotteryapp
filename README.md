@@ -17,7 +17,7 @@ WHAT IS DONE:
 Endpoint to scrap based on date
 
 example
-http://localhost:8082/api/v1/<PROVIDER>/actions/send?date=20231115
+http://localhost:8082/api/v1/{PROVIDER}/actions/scrap?date=20231115
 
 Where provider is a path variable can be replace by either MAGNUM, DAMACAI or TOTO
 date is a parameter and must enter in the format YYYYMMDD
