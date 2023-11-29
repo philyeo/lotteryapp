@@ -24,5 +24,14 @@ date is a parameter and must enter in the format YYYYMMDD
 
 Currently only DAMACAI and MAGNUM works. TOTO is work in progress.
 
+If installed properly with docker compose setup and after successfully ran scarp endpoint, 
+One should see 2 collections
+
+![img.png](img.png)
+
+Here's an example of the Damacai Result collection of document
+![img_1.png](img_1.png)
+
+
 TODO:
 The app portion which provides endpoints to investigate the numbers after there are stored in mongodb as collections
