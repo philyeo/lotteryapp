@@ -1,5 +1,6 @@
 # lotteryapp
-I am building a lottery app
+I am building a lottery app just for FUN and to solidify my Springboot and Java knowledge - keep it from being rusty.
+However since this is a hobbyist app, it is not entirely built for production, although in some part I attempt keep it as best practise as possible
 
 It uses:
 - Springboot
