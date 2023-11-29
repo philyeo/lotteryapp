@@ -1,5 +1,11 @@
 package com.philyeo.lotteryapp.admin.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.philyeo.lotteryapp.shared.dto.magnum.MagnumPastResults;
+import com.philyeo.lotteryapp.shared.dto.magnum.MagnumResult;
+import com.philyeo.lotteryapp.shared.mapper.Dto2DocumentFldMapper;
+import com.philyeo.lotteryapp.shared.persistance.document.MagnumResults;
+import com.philyeo.lotteryapp.shared.persistance.repository.MagnumRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,23 +17,35 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
-import static com.philyeo.lotteryapp.shared.EndpointConstants.TEST_MAINVIEW_MAGNUM;
+import static com.philyeo.lotteryapp.shared.EndpointConstants.MAINVIEW_MAGNUM;
 
 @Service
 @AllArgsConstructor
 @Slf4j
 public class MagnumScrapperService {
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    private Dto2DocumentFldMapper mapper;
+
+    private MagnumRepository repository;
+
     public void scrapDrawResult(String date) throws ParseException {
 
         if(isValidDateFormat(date)) {
             String convertedDateFormat = convertDateFormat(date);
-            String initialUrl = TEST_MAINVIEW_MAGNUM;
+            String added10daysDate = add10moreDays(convertedDateFormat);
+            //"https://app-apdapi-prod-southeastasia-01.azurewebsites.net/results/past/between-dates/31-10-2023/10-11-2023/9";
+            String initialUrl = MAINVIEW_MAGNUM + convertedDateFormat + "/" + added10daysDate + "/9";
 
-
-            log.debug(getDrawResult(initialUrl));
+            repository.insert(MagnumResults.builder()
+                    .drawDate(date)
+                    .result(getDrawResult(initialUrl))
+                .build());
+//            log.debug(getDrawResult(initialUrl));
 
 //            DamacaiResult damacaiResult = objectMapper.readValue(getDrawResult(innerLink), DamacaiResult.class);
 
@@ -38,7 +56,7 @@ public class MagnumScrapperService {
 
     }
 
-    private String getDrawResult(String initialUrl) {
+    private MagnumResult getDrawResult(String initialUrl) {
         try {
             String url = initialUrl;
             URL obj = new URL(url);
@@ -72,9 +90,11 @@ public class MagnumScrapperService {
             }
             in.close();
 
+            String res = response.toString();
             // Print the response
-            System.out.println(response.toString());
-            return response.toString();
+//            System.out.println(response.toString());
+            MagnumPastResults magnumPastResults = objectMapper.readValue(res, MagnumPastResults.class);
+            return mapper.dto2DocumentField(magnumPastResults.getPastResultsRange().getPastResults().get(0));
 
 
         } catch (
@@ -110,6 +130,18 @@ public class MagnumScrapperService {
 
         Date date = inputDateFormat.parse(dateStr);
         return outputDateFormat.format(date);
+    }
+
+    private String add10moreDays(String dateStr) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Date date = dateFormat.parse(dateStr);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, 10);
+
+        Date newDate = calendar.getTime();
+        return dateFormat.format(newDate);
     }
 
 }

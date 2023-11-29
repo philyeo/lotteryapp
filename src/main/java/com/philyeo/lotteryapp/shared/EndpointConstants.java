@@ -10,6 +10,7 @@ public class EndpointConstants {
 
     public static final String TEST_MAINVIEW_MAGNUM = "https://app-apdapi-prod-southeastasia-01.azurewebsites.net/results/past/between-dates/31-10-2023/10-11-2023/9";
 
+    public static final String MAINVIEW_MAGNUM = "https://app-apdapi-prod-southeastasia-01.azurewebsites.net/results/past/between-dates/";
     public static final String MAINVIEW_DAMACAI = "https://www.damacai.com.my/callpassresult?pastdate=";
 
 }
