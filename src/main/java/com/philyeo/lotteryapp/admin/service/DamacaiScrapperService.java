@@ -15,7 +15,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
+import static com.philyeo.lotteryapp.shared.EndpointConstants.MAINVIEW_DAMACAI;
 import static com.philyeo.lotteryapp.shared.EndpointConstants.TEST_MAINVIEW_DAMACAI;
 
 @Service
@@ -30,15 +33,17 @@ public class DamacaiScrapperService {
 
 
     public void scrapDrawResult(String date) throws IOException {
-        String initialUrl = TEST_MAINVIEW_DAMACAI;
-        String innerLink = getDrawResultURL(initialUrl).getLink();
 
-        DamacaiResult damacaiResult = objectMapper.readValue(getDrawResult(innerLink), DamacaiResult.class);
+        if(isValidDateFormat(date)) {
+            String initialUrl = MAINVIEW_DAMACAI + date;
+            String innerLink = getDrawResultURL(initialUrl).getLink();
 
-        repository.insert(DamacaiResults.builder()
-            .drawDate(date)
-            .result(damacaiResult)
-            .build());
+            DamacaiResult damacaiResult = objectMapper.readValue(getDrawResult(innerLink), DamacaiResult.class);
+
+            repository.insert(DamacaiResults.builder().drawDate(date).result(damacaiResult).build());
+        } else {
+            //throw an error here
+        }
     }
 
     private DamacaiDrawResultResponse getDrawResultURL(String initialUrl) {
@@ -105,6 +110,20 @@ public class DamacaiScrapperService {
 
         connection.disconnect();
         return  responseBody;
+    }
+
+    public boolean isValidDateFormat(String dateStr) {
+        // Set the desired date format (YYYYMMDD)
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        dateFormat.setLenient(false); // Set lenient to false for strict date validation
+
+        try {
+            // Parse the input date string
+            dateFormat.parse(dateStr);
+            return true; // Return true if parsing succeeds
+        } catch (ParseException e) {
+            return false; // Return false if parsing fails
+        }
     }
 
 }

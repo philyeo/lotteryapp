@@ -23,7 +23,7 @@ public class ScrapperController {
     @PostMapping("{company}/actions/send")
     @ResponseStatus(HttpStatus.OK)
     public void scrapdrawresult(@PathVariable("company") @NotNull final  String company,
-        @RequestParam(name = "date", required = true) String date) throws IOException {
+        @RequestParam(name = "date", required = true) String date) throws IOException { // DATE expected in YYYYMMDD format
         if(company.equals(LotteryCompany.DAMACAI.name())) {
             damacaiScrapperService.scrapDrawResult(date);
         }

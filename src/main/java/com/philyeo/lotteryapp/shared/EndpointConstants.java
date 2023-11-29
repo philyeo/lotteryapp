@@ -8,4 +8,6 @@ public class EndpointConstants {
     public static final String TEST_TOTO = "https://www.sportstoto.com.my/popup_past_results.asp?drawNo=5353/21";
     public static final String TEST_MAINVIEW_DAMACAI = "https://www.damacai.com.my/callpassresult?pastdate=20231101";
 
+    public static final String MAINVIEW_DAMACAI = "https://www.damacai.com.my/callpassresult?pastdate=";
+
 }
