@@ -16,6 +16,7 @@
     <properties>
         <java.version>17</java.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
+        <jsoup.version>1.16.2</jsoup.version>
     </properties>
     <dependencies>
 <!--        <dependency>-->
@@ -49,6 +50,11 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct-processor</artifactId>
             <version>${mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version> <!-- Use the latest version -->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -12,6 +12,6 @@ public class SupremeToto {
 
     private Optional<String> jackpotAmt;
 
-    private Optional<List<Integer>> winningNumbers;
+    private Optional<List<String>> winningNumbers;
 
 }
