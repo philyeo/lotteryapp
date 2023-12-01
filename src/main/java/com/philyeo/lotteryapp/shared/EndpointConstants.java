@@ -6,7 +6,7 @@ public class EndpointConstants {
     public static final String RESULTVIEW_TOTO = "https://www.sportstoto.com.my/popup_past_results.asp?drawNo=";
     public static final String MAINVIEW_TOTO = "https://www.sportstoto.com.my/";
     public static final String TEST_TOTO_OLD = "https://www.sportstoto.com.my/popup_past_results.asp?drawNo=5353/21";
-    public static final String TEST_TOTO_NEW = "https://www.sportstoto.com.my/results_past_print.asp?drawNo=5719/23";
+    public static final String TEST_TOTO_PRINT = "https://www.sportstoto.com.my/results_past_print.asp?drawNo=";
     public static final String TEST_MAINVIEW_DAMACAI = "https://www.damacai.com.my/callpassresult?pastdate=20231101";
 
     public static final String TEST_MAINVIEW_MAGNUM = "https://app-apdapi-prod-southeastasia-01.azurewebsites.net/results/past/between-dates/31-10-2023/10-11-2023/9";

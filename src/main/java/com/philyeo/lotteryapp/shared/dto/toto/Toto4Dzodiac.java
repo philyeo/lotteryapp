@@ -1,28 +1,29 @@
 package com.philyeo.lotteryapp.shared.dto.toto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.util.Optional;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Toto4Dzodiac {
 
-    private Optional<String> zodiacImgUrl;
+    private String zodiacImgUrl;
 
-    private Optional<String> firstPrize;
+    private String firstPrize;
 
-    private Optional<String> secondPrize;
+    private String secondPrize;
 
-    private Optional<String> thirdPrize;
+    private String thirdPrize;
 
-    private Optional<String> fourthPrize;
+    private String fourthPrize;
 
-    private Optional<String> fifthPrize;
+    private String fifthPrize;
 
-    private Optional<String> sixthPrize;
+    private String sixthPrize;
 
 }

@@ -1,26 +1,25 @@
 package com.philyeo.lotteryapp.shared.dto.toto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Toto6D {
 
-    private Optional<String> firstPrize;
+    private String firstPrize;
 
-    private Optional<List<String>> secondPrize;
+    private List<String> secondPrize;
 
-    private Optional<List<String>> thirdPrize;
+    private List<String> thirdPrize;
 
-    private Optional<List<String>> fourthPrize;
+    private List<String> fourthPrize;
 
-    private Optional<List<String>> fifthPrize;
+    private List<String> fifthPrize;
 }

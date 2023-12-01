@@ -1,5 +1,6 @@
 package com.philyeo.lotteryapp.shared.dto.toto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.function.Function;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GameResult {
 
     @NotBlank

@@ -1,20 +1,17 @@
 package com.philyeo.lotteryapp.shared.dto.toto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Document
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TotoResult {
 
-    @Id
     private String drawDate;
 
     private String drawNumber;

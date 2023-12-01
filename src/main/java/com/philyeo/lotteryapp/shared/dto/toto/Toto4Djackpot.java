@@ -1,23 +1,22 @@
 package com.philyeo.lotteryapp.shared.dto.toto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Toto4Djackpot {
 
-    private Optional<String> jackpot1Amt;
+    private String jackpot1Amt;
 
-    private Optional<String> jackpot2Amt;
+    private String jackpot2Amt;
 
-    private Optional<List<String>> numbers;
+    private List<String> numbers;
 
 }
