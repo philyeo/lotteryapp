@@ -2,10 +2,7 @@ package com.philyeo.lotteryapp.admin.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.philyeo.lotteryapp.shared.TriFunction;
-import com.philyeo.lotteryapp.shared.dto.damacai.DamacaiResult;
 import com.philyeo.lotteryapp.shared.dto.toto.*;
-import com.philyeo.lotteryapp.shared.mapper.Dto2DocumentFldMapper;
-import com.philyeo.lotteryapp.shared.persistance.document.DamacaiResults;
 import com.philyeo.lotteryapp.shared.persistance.document.TotoResults;
 import com.philyeo.lotteryapp.shared.persistance.repository.TotoRepository;
 import lombok.AllArgsConstructor;
@@ -20,11 +17,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.philyeo.lotteryapp.shared.EndpointConstants.*;
-import static com.philyeo.lotteryapp.shared.EndpointConstants.MAINVIEW_TOTO;
 
 @Service
 @AllArgsConstructor
@@ -35,7 +34,7 @@ public class TotoScrapperService {
 
     private TotoRepository repository;
 
-    public void scrapDrawResult(String date) throws IOException {
+    public void scrapDrawResultByDate(String date) throws IOException {
 
         if(isValidDateFormat(date)) {
             Map<String, String> drawDateMap = getDateDrawMap(MONTHVIEW_TOTO + getFixedDateForUrl(date));

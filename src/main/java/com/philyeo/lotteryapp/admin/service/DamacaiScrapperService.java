@@ -31,7 +31,7 @@ public class DamacaiScrapperService {
     private DamacaiRepository repository;
 
 
-    public void scrapDrawResult(String date) throws IOException {
+    public void scrapDrawResultByDate(String date) throws IOException {
 
         if(isValidDateFormat(date)) {
             String initialUrl = MAINVIEW_DAMACAI + date;

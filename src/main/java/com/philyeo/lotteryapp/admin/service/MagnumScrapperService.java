@@ -33,7 +33,7 @@ public class MagnumScrapperService {
 
     private MagnumRepository repository;
 
-    public void scrapDrawResult(String date) throws ParseException {
+    public void scrapDrawResultByDate(String date) throws ParseException {
 
         if(isValidDateFormat(date)) {
             String convertedDateFormat = convertDateFormat(date);
