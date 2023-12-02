@@ -1,6 +1,5 @@
 package com.philyeo.lotteryapp.admin.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.philyeo.lotteryapp.shared.TriFunction;
 import com.philyeo.lotteryapp.shared.dto.toto.*;
 import com.philyeo.lotteryapp.shared.persistance.document.TotoResults;
@@ -29,8 +28,6 @@ import static com.philyeo.lotteryapp.shared.EndpointConstants.*;
 @AllArgsConstructor
 @Slf4j
 public class TotoScrapperService {
-
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     private TotoRepository repository;
 
