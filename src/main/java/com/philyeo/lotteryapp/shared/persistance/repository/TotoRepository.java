@@ -9,5 +9,8 @@ import org.springframework.stereotype.Repository;
 public interface TotoRepository extends MongoRepository<TotoResult, String> {
 
     void insert(TotoResults results);
+    TotoResults findByDrawDate(String drawDate);
+
+
 
 }

@@ -10,4 +10,6 @@ public interface MagnumRepository extends MongoRepository<MagnumResult, String> 
 
     void insert(MagnumResults results);
 
+    MagnumResults findByDrawDate(String drawDate);
+
 }

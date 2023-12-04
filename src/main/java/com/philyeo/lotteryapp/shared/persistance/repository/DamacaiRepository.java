@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface DamacaiRepository extends MongoRepository<DamacaiResult, String> {
 
     void insert(DamacaiResults results);
+
+    DamacaiResults findByDrawDate(String drawDate);
 }

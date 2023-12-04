@@ -66,7 +66,7 @@ public class TotoScrapperService {
         TotoResult result = getDrawResult(TEST_TOTO_PRINT + drawNo);
         System.out.println(result);
         repository.insert(TotoResults.builder()
-            .drawDate(result.getDrawDate())
+            .drawDate(result.getDrawDate().trim())
             .result(result)
             .build());
 
@@ -79,10 +79,10 @@ public class TotoScrapperService {
 
             // Using CSS selectors to select specific elements
             Element el1 = doc.selectFirst("body > div > center > table > tbody > tr:nth-child(2) > td > div > table > tbody > tr > td:nth-child(1) > span > font > b");
-            String drawDate = getDrawHeaderDetailsTriFunction.apply(el1.childNode(0).toString(), ":", 1);
+            String drawDate = getDrawHeaderDetailsTriFunction.apply(el1.childNode(0).toString(), ":", 1).trim();
 
             Elements el2 = doc.selectXpath("/html/body/div/center/table/tbody/tr[2]/td/div/table/tbody/tr/td[2]/span/b/font");
-            String drawNo = getDrawHeaderDetailsTriFunction.apply(el2.get(0).childNode(0).toString(), "No.", 1);
+            String drawNo = getDrawHeaderDetailsTriFunction.apply(el2.get(0).childNode(0).toString(), "No.", 1).trim();
 
             Elements top3els = doc.selectXpath("/html/body/div/center/table/tbody/tr[5]/td/table[1]/tbody/tr[2]/td/span");
             List<String> top3PrizeText = top3els.eachText();
