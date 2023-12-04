@@ -15,7 +15,9 @@ Admin part serves to scrap the results from the various lottery companys' websit
 
 Damacai and Magnum both exposes their results in json thus all calls are make via requestTemplate whereas Toto does not and thus needs to be scrap using selenium
 
-For Toto, we are using JSOUP instead of selenium. Previously Selenium was use but the simplicity of setting up JSOUP is preferred over selenium. Infact, I like how jsoup have so many different helper methods to extract the elements and the text(s) from the elements.
+For Toto, we are using JSOUP instead of ~~selenium~~ jsoup. Previously Selenium was use but the simplicity of setting up JSOUP is preferred over selenium. Infact, I like how jsoup have so many different helper methods to extract the elements and the text(s) from the elements.
+
+In creating the endpoint for scraping by year, jsoup was also use in some instances to get the list of drawDates and drawNumbers
 
 WHAT IS DONE:
 Endpoint to scrap based on date
