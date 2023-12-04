@@ -52,7 +52,7 @@ public class DamacaiScrapperService {
 
             DamacaiResult damacaiResult = objectMapper.readValue(getDrawResult(innerLink), DamacaiResult.class);
 
-            repository.insert(DamacaiResults.builder().drawDate(date).result(damacaiResult).build());
+            repository.insert(DamacaiResults.builder().drawDate(damacaiResult.getDrawDate()).result(damacaiResult).build());
         } else {
             //throw an error here
         }

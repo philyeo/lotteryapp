@@ -2,10 +2,7 @@ package com.philyeo.lotteryapp.admin.service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.philyeo.lotteryapp.shared.dto.magnum.Draw;
-import com.philyeo.lotteryapp.shared.dto.magnum.DrawDatesByMonth;
-import com.philyeo.lotteryapp.shared.dto.magnum.MagnumPastResults;
-import com.philyeo.lotteryapp.shared.dto.magnum.MagnumResult;
+import com.philyeo.lotteryapp.shared.dto.magnum.*;
 import com.philyeo.lotteryapp.shared.mapper.Dto2DocumentFldMapper;
 import com.philyeo.lotteryapp.shared.persistance.document.MagnumResults;
 import com.philyeo.lotteryapp.shared.persistance.repository.MagnumRepository;
@@ -65,14 +62,15 @@ public class MagnumScrapperService {
     public void scrapDrawResultByDate(String date) throws ParseException {
 
         if(isValidDateFormat(date)) {
-            String convertedDateFormat = convertDateFormat(date);
+            String convertedDateFormat = convertDateFormat(date, 1);
             String added10daysDate = add10moreDays(convertedDateFormat);
             //"https://app-apdapi-prod-southeastasia-01.azurewebsites.net/results/past/between-dates/31-10-2023/10-11-2023/9";
             String initialUrl = MAINVIEW_MAGNUM + convertedDateFormat + "/" + added10daysDate + "/9";
-
+            System.out.println(initialUrl);
+            MagnumResult result = getDrawResult(initialUrl, convertDateFormat(date, 2));
             repository.insert(MagnumResults.builder()
-                    .drawDate(date)
-                    .result(getDrawResult(initialUrl))
+                    .drawDate(result.getDrawDate())
+                    .result(result)
                 .build());
         } else {
             //throw an error here
@@ -80,7 +78,7 @@ public class MagnumScrapperService {
 
     }
 
-    private MagnumResult getDrawResult(String initialUrl) {
+    private MagnumResult getDrawResult(String initialUrl, String date) {
         try {
             String url = initialUrl;
             URL obj = new URL(url);
@@ -100,13 +98,22 @@ public class MagnumScrapperService {
 
             String res = response.toString();
             // Print the response
-            System.out.println(response.toString());
+//            System.out.println(response.toString());
             MagnumPastResults magnumPastResults = objectMapper.readValue(res, MagnumPastResults.class);
-            return mapper.dto2DocumentField(magnumPastResults.getPastResultsRange().getPastResults().get(0));
+            List<PastResult> pastResults = magnumPastResults.getPastResultsRange().getPastResults();
+            MagnumResult magnumResult = null;
+            for(PastResult pastResult: pastResults) {
+                if(pastResult.getDrawDate().equals(date)) {
+                    magnumResult = mapper.dto2DocumentField(pastResult);
+                }
+            }
+            System.out.println(magnumResult);
+            return magnumResult;
 
 
         } catch (
         IOException e) {
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -157,11 +164,16 @@ public class MagnumScrapperService {
         }
     }
 
-    private String convertDateFormat(String dateStr) throws ParseException {
+    private String convertDateFormat(String dateStr, Integer formatType) throws ParseException {
         String formattedDate = "";
-
+        SimpleDateFormat outputDateFormat = null;
+        
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyyMMdd");
-        SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        if (formatType == 1) {
+            outputDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        } else if (formatType ==2){
+            outputDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        }
 
         Date date = inputDateFormat.parse(dateStr);
         return outputDateFormat.format(date);

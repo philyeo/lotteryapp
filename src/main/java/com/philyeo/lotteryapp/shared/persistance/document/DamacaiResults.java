@@ -18,6 +18,7 @@ public class DamacaiResults {
     private String id;
 
     private String drawDate;
+
     private DamacaiResult result;
 
     public DamacaiResults(String drawDate, DamacaiResult result) {
