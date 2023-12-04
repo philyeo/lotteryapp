@@ -10,6 +10,7 @@ import com.philyeo.lotteryapp.shared.persistance.document.TotoResults;
 import com.philyeo.lotteryapp.shared.web.errors.LotteryAppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +46,20 @@ public class LotteryController {
         }
     }
 
+    @GetMapping("/TOTO/{drawDate}/csv") //must be in the format YYYYMMDD
+    public ResponseEntity<String> getTotoResultCSVByDrawDate(@PathVariable String drawDate) throws ParseException {
+        if (isValidDateFormat(drawDate)) {
+            //then date needs to be converted to DD/MM/yyyy format before calling service
+            String csvResult = extractorService.getTotoResultsCSVByDrawDate(convertDateFormat(drawDate, 2));
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "attachment; filename=toto_results.csv");
+            return ResponseEntity.ok().headers(headers).body(csvResult);
+
+        } else {
+            throw new LotteryAppException("Wrong format", "L0002", "Date not in YYYYMMDD format");
+        }
+    }
+
     @GetMapping("/MAGNUM/{drawDate}") //must be in the format YYYYMMDD
     public ResponseEntity<MagnumResult> getMagnumResultByDrawDate(@PathVariable String drawDate) throws ParseException {
         if (isValidDateFormat(drawDate)) {
@@ -74,7 +89,6 @@ public class LotteryController {
             throw new LotteryAppException("Wrong format", "L0002", "Date not in YYYYMMDD format");
         }
     }
-
 
     private boolean isValidDateFormat(String dateStr) {
         // Set the desired date format (YYYYMMDD)

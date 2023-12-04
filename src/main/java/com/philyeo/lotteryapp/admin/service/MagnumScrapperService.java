@@ -69,7 +69,7 @@ public class MagnumScrapperService {
             System.out.println(initialUrl);
             MagnumResult result = getDrawResult(initialUrl, convertDateFormat(date, 2));
             repository.insert(MagnumResults.builder()
-                    .drawDate(result.getDrawDate())
+                    .drawDate(result.getDrawDate().trim())
                     .result(result)
                 .build());
         } else {
