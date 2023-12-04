@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.philyeo.lotteryapp.shared.EndpointConstants.*;
@@ -31,10 +28,25 @@ public class TotoScrapperService {
 
     private TotoRepository repository;
 
+    public void scrapDrawResultByYear(String year) throws IOException {
+        DrawNumbersByYearTotoDto dto = new DrawNumbersByYearTotoDto();
+        dto.setYear(year);
+        for(int m = 1; m <=12; m++) {
+            Map<String, String> map = getDateDrawNoMap(MONTHVIEW_TOTO + m + "/" + m + "/" + year);
+            dto.addDrawNumbers(new ArrayList<>(map.values()));
+//            System.out.println(map);
+        }
+
+        for(String drawNo: dto.getDrawNumbers()) {
+            scrapDrawResultByDrawNo(drawNo);
+        }
+
+    }
+
     public void scrapDrawResultByDate(String date) throws IOException {
 
         if(isValidDateFormat(date)) {
-            Map<String, String> drawDateMap = getDateDrawMap(MONTHVIEW_TOTO + getFixedDateForUrl(date));
+            Map<String, String> drawDateMap = getDateDrawNoMap(MONTHVIEW_TOTO + getFixedDateForUrl(date));
             //get the DrawNo by DrawDate
             String drawNo = drawDateMap.get(getDateForDateDrawMapKey(date));
 
@@ -47,6 +59,17 @@ public class TotoScrapperService {
         } else {
             //throw an error here
         }
+    }
+
+    public void scrapDrawResultByDrawNo(String drawNo) throws IOException {
+
+        TotoResult result = getDrawResult(TEST_TOTO_PRINT + drawNo);
+        System.out.println(result);
+        repository.insert(TotoResults.builder()
+            .drawDate(result.getDrawDate())
+            .result(result)
+            .build());
+
     }
 
     private TotoResult getDrawResult(String printUrl) {
@@ -183,7 +206,7 @@ public class TotoScrapperService {
         return month + "/" + month + "/" + year;
     }
 
-    private Map<String, String> getDateDrawMap(String url) throws IOException {
+    private Map<String, String> getDateDrawNoMap(String url) throws IOException {
 
         Document doc = Jsoup.connect(url).get();
 
@@ -194,6 +217,8 @@ public class TotoScrapperService {
 
             Elements sibEls = element.siblingElements();
 
+            // key is date in format dd/mm/yyyy
+            // value is drawnumber in format e.g. 5622/23
             dateDrawMap.put(getTextValue.apply(element1.text(), ",", 0), getTextValue.apply(sibEls.get(1).text(), ": ", 1));
 
         }

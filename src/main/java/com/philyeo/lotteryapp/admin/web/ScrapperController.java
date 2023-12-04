@@ -49,7 +49,13 @@ public class ScrapperController {
                 totoScrapperService.scrapDrawResultByDate(date);
             }
         } else if(null!=year) {
-
+            if (company.equals(LotteryCompany.DAMACAI.name())) {
+                damacaiScrapperService.scrapDrawResultByYear(year);
+            } else if (company.equals(LotteryCompany.MAGNUM.name())) {
+                magnumScrapperService.scrapDrawResultByYear(year);
+            } else if (company.equals(LotteryCompany.TOTO.name())) {
+                totoScrapperService.scrapDrawResultByYear(year);
+            }
         }
     }
 

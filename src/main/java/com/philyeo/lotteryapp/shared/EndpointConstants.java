@@ -15,4 +15,6 @@ public class EndpointConstants {
     public static final String MAINVIEW_MAGNUM = "https://app-apdapi-prod-southeastasia-01.azurewebsites.net/results/past/between-dates/";
     public static final String MAINVIEW_DAMACAI = "https://www.damacai.com.my/callpassresult?pastdate=";
 
+    public static final String DAMACAI_LIST_DATES = "https://www.damacai.com.my/ListPastResult";
+
 }

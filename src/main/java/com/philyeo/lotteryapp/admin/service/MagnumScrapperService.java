@@ -1,13 +1,14 @@
 package com.philyeo.lotteryapp.admin.service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.philyeo.lotteryapp.shared.dto.magnum.Draw;
 import com.philyeo.lotteryapp.shared.dto.magnum.DrawDatesByMonth;
 import com.philyeo.lotteryapp.shared.dto.magnum.MagnumPastResults;
 import com.philyeo.lotteryapp.shared.dto.magnum.MagnumResult;
 import com.philyeo.lotteryapp.shared.mapper.Dto2DocumentFldMapper;
 import com.philyeo.lotteryapp.shared.persistance.document.MagnumResults;
 import com.philyeo.lotteryapp.shared.persistance.repository.MagnumRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +19,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static com.philyeo.lotteryapp.shared.EndpointConstants.DRAWDATES_BY_YEAR;
 import static com.philyeo.lotteryapp.shared.EndpointConstants.MAINVIEW_MAGNUM;
 
 @Service
-@AllArgsConstructor
 @Slf4j
 public class MagnumScrapperService {
 
@@ -35,6 +38,29 @@ public class MagnumScrapperService {
 
     private MagnumRepository repository;
 
+    public MagnumScrapperService(ObjectMapper objectMapper, Dto2DocumentFldMapper mapper, MagnumRepository repository) {
+        objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+
+        this.objectMapper = objectMapper;
+        this.mapper = mapper;
+        this.repository = repository;
+    }
+
+    public void scrapDrawResultByYear(String year) throws IOException, ParseException {
+        for (int m = 1; m <= 12; m++) {
+            //System.out.println(getPastDrawDatesByMonth("2023", Integer.toString(m)));
+            DrawDatesByMonth drawDatesByMonth = getPastDrawDatesByMonth("2023", Integer.toString(m));
+            List<Draw> draws = drawDatesByMonth.getPastDrawDates().getDraws();
+            for(Draw draw: draws) {
+                LocalDate date = LocalDate.parse(draw.getDrawDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+                // Format the LocalDate object to the desired format "dd-MM-yyyy"
+//                System.out.println(date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                scrapDrawResultByDate(date.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+            }
+
+        }
+    }
 
     public void scrapDrawResultByDate(String date) throws ParseException {
 
@@ -54,57 +80,14 @@ public class MagnumScrapperService {
 
     }
 
-    public void scrapDrawResultByYear(String date) throws ParseException {
-
-    }
-
-    private DrawDatesByMonth getPastDrawDates(String year) throws IOException {
-        String endpointLink = String.format(DRAWDATES_BY_YEAR, year);
-        URL obj = new URL(endpointLink);
-        HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-
-        // Set request headers
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Accept", "*/*");
-        connection.setRequestProperty("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8");
-        connection.setRequestProperty("Connection", "keep-alive");
-        connection.setRequestProperty("Origin", "https://magnum4d.my");
-        connection.setRequestProperty("Referer", "https://magnum4d.my/");
-        connection.setRequestProperty("Sec-Fetch-Dest", "empty");
-        connection.setRequestProperty("Sec-Fetch-Mode", "cors");
-        connection.setRequestProperty("Sec-Fetch-Site", "cross-site");
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36");
-        connection.setRequestProperty("sec-ch-ua", "\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"");
-        connection.setRequestProperty("sec-ch-ua-mobile", "?0");
-        connection.setRequestProperty("sec-ch-ua-platform", "\"Windows\"");
-        connection.setDoOutput(true);
-        return null;
-    }
-
     private MagnumResult getDrawResult(String initialUrl) {
         try {
             String url = initialUrl;
             URL obj = new URL(url);
-            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-
-            // Set request headers
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Accept", "*/*");
-            connection.setRequestProperty("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8");
-            connection.setRequestProperty("Connection", "keep-alive");
-            connection.setRequestProperty("Origin", "https://magnum4d.my");
-            connection.setRequestProperty("Referer", "https://magnum4d.my/");
-            connection.setRequestProperty("Sec-Fetch-Dest", "empty");
-            connection.setRequestProperty("Sec-Fetch-Mode", "cors");
-            connection.setRequestProperty("Sec-Fetch-Site", "cross-site");
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36");
-            connection.setRequestProperty("sec-ch-ua", "\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"");
-            connection.setRequestProperty("sec-ch-ua-mobile", "?0");
-            connection.setRequestProperty("sec-ch-ua-platform", "\"Windows\"");
-            connection.setDoOutput(true);
+            HttpURLConnection connection = getHttpURLConnection(obj);
 
             int responseCode = connection.getResponseCode();
-            System.out.println("Response Code: " + responseCode);
+//            System.out.println("Response Code: " + responseCode);
 
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String inputLine;
@@ -117,7 +100,7 @@ public class MagnumScrapperService {
 
             String res = response.toString();
             // Print the response
-//            System.out.println(response.toString());
+            System.out.println(response.toString());
             MagnumPastResults magnumPastResults = objectMapper.readValue(res, MagnumPastResults.class);
             return mapper.dto2DocumentField(magnumPastResults.getPastResultsRange().getPastResults().get(0));
 
@@ -126,6 +109,33 @@ public class MagnumScrapperService {
         IOException e) {
             return null;
         }
+    }
+
+
+    private DrawDatesByMonth getPastDrawDatesByMonth(String year, String month) throws IOException {
+        String endpointLink = DRAWDATES_BY_YEAR.replace("%y", year).replace("%m", month);
+        URL obj = new URL(endpointLink);
+        HttpURLConnection connection = getHttpURLConnection(obj);
+
+
+        int responseCode = connection.getResponseCode();
+        //        System.out.println("Response Code: " + responseCode);
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        String res = response.toString();
+        DrawDatesByMonth drawDatesByMonth = objectMapper.readValue(res, DrawDatesByMonth.class);
+        drawDatesByMonth.setMonth(month);
+        drawDatesByMonth.setYear(year);
+        return drawDatesByMonth;
+
     }
 
     private boolean isValidDateFormat(String dateStr) {
@@ -167,6 +177,28 @@ public class MagnumScrapperService {
 
         Date newDate = calendar.getTime();
         return dateFormat.format(newDate);
+    }
+
+    private HttpURLConnection getHttpURLConnection(URL obj) throws IOException {
+
+        HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+
+        // Set request headers
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Accept", "*/*");
+        connection.setRequestProperty("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8");
+        connection.setRequestProperty("Connection", "keep-alive");
+        connection.setRequestProperty("Origin", "https://magnum4d.my");
+        connection.setRequestProperty("Referer", "https://magnum4d.my/");
+        connection.setRequestProperty("Sec-Fetch-Dest", "empty");
+        connection.setRequestProperty("Sec-Fetch-Mode", "cors");
+        connection.setRequestProperty("Sec-Fetch-Site", "cross-site");
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36");
+        connection.setRequestProperty("sec-ch-ua", "\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"");
+        connection.setRequestProperty("sec-ch-ua-mobile", "?0");
+        connection.setRequestProperty("sec-ch-ua-platform", "\"Windows\"");
+        connection.setDoOutput(true);
+        return connection;
     }
 
 }

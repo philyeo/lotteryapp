@@ -2,6 +2,7 @@ package com.philyeo.lotteryapp.admin;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.philyeo.lotteryapp.shared.dto.magnum.Draw;
 import com.philyeo.lotteryapp.shared.dto.magnum.DrawDatesByMonth;
 
 import java.io.BufferedReader;
@@ -9,6 +10,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static com.philyeo.lotteryapp.shared.EndpointConstants.DRAWDATES_BY_YEAR;
 
@@ -21,7 +25,16 @@ public class MagnumDrawDatesByYearScrapper {
         objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
 
         for (int m = 1; m <= 12; m++) {
-            System.out.println(getPastDrawDatesByMonth("2023", Integer.toString(m)));
+            //System.out.println(getPastDrawDatesByMonth("2023", Integer.toString(m)));
+            DrawDatesByMonth drawDatesByMonth = getPastDrawDatesByMonth("2023", Integer.toString(m));
+            List<Draw> draws = drawDatesByMonth.getPastDrawDates().getDraws();
+            for(Draw draw: draws) {
+                LocalDate date = LocalDate.parse(draw.getDrawDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+                // Format the LocalDate object to the desired format "dd-MM-yyyy"
+                System.out.println(date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            }
+
         }
 
     }
@@ -67,7 +80,7 @@ public class MagnumDrawDatesByYearScrapper {
 
 
         int responseCode = connection.getResponseCode();
-        System.out.println("Response Code: " + responseCode);
+//        System.out.println("Response Code: " + responseCode);
 
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String inputLine;
