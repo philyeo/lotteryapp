@@ -1,5 +1,6 @@
 package com.philyeo.lotteryapp.app.service;
 
+import com.philyeo.lotteryapp.shared.Utils;
 import com.philyeo.lotteryapp.shared.persistance.document.DamacaiResults;
 import com.philyeo.lotteryapp.shared.persistance.document.MagnumResults;
 import com.philyeo.lotteryapp.shared.persistance.document.TotoResults;
@@ -34,15 +35,22 @@ public class ExtractorService {
         TotoResults results = getTotoResultsByDrawDate(drawDate);
         StringBuilder csvData = new StringBuilder();
 
+        Integer year = Integer.parseInt(drawDate.substring(drawDate.length() - 4));
+        System.out.println(year);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+//        LocalDate date = LocalDate.parse(drawDate, formatter);
+//        System.out.println(date.toString());
+        String zodiacYear = Utils.getChineseZodiac(year);
+
         if (results != null) {
-            appendCSVLine(csvData, results.getResult().getToto4D().getFirstPrize(), results.getDrawDate(), "toto4D.firstPrize");
-            appendCSVLine(csvData, results.getResult().getToto4D().getSecondPrize(), results.getDrawDate(), "toto4D.secondPrize");
-            appendCSVLine(csvData, results.getResult().getToto4D().getThirdPrize(), results.getDrawDate(), "toto4D.thirdPrize");
+            appendCSVLine(csvData, results.getResult().getToto4D().getFirstPrize(), results.getDrawDate(), "toto", "toto4D.firstPrize", zodiacYear);
+            appendCSVLine(csvData, results.getResult().getToto4D().getSecondPrize(), results.getDrawDate(), "toto", "toto4D.secondPrize", zodiacYear);
+            appendCSVLine(csvData, results.getResult().getToto4D().getThirdPrize(), results.getDrawDate(), "toto", "toto4D.thirdPrize", zodiacYear);
 
             List<String> consolationList = results.getResult().getToto4D().getConsolationPrize();
             if (consolationList != null && !consolationList.isEmpty()) {
                 for (String consolation : consolationList) {
-                    appendCSVLine(csvData, consolation, results.getDrawDate(), "toto4D.consolationPrize");
+                    appendCSVLine(csvData, consolation, results.getDrawDate(), "toto", "toto4D.consolationPrize", zodiacYear);
                 }
             }
         }
@@ -58,9 +66,9 @@ public class ExtractorService {
         return damacaiRepository.findByDrawDate(drawDate);
     }
 
-    private void appendCSVLine(StringBuilder csvData, String value, String field1, String field2) {
-        if (value != null && !value.isEmpty()) {
-            csvData.append(value).append(", ").append(field1).append(", ").append(field2).append("\n");
+    private void appendCSVLine(StringBuilder csvData, String number, String drawDate, String lottery, String category, String zodiacYear) {
+        if (number != null && !number.isEmpty()) {
+            csvData.append(number).append(", ").append(drawDate).append(", ").append(lottery).append(", ").append(category).append(", ").append(zodiacYear).append("\n");
         }
     }
 
